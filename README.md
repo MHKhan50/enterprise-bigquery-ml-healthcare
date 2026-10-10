@@ -27,3 +27,24 @@ enterprise-bigquery-ml-healthcare/
 │   ├── linear_regression.sql     # Linear Regression model script
 │   └── logistic_regression.sql   # Logistic Regression classification script
 └── screenshots/                  # Model performance & execution screenshots
+
+## Author
+**Muzammal Hussain** - Software Engineer  
+GitHub: [@MHKhan50](https://github.com/MHKhan50)
+
+---
+
+## Citation
+If you use this repository or code, please cite it as follows:
+
+```bibtex
+@software{hussain_2026_23272224,
+  author       = {Hussain, Muzammal},
+  title        = {Enterprise BigQuery ML: Healthcare Shortage Area Analytics},
+  month        = oct,
+  year         = 2026,
+  publisher    = {Zenodo},
+  version      = {1.0.0},
+  doi          = {10.5281/zenodo.23272224},
+  url          = {[https://doi.org/10.5281/zenodo.23272224](https://doi.org/10.5281/zenodo.23272224)}
+}
