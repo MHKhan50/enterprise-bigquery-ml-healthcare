@@ -3,8 +3,8 @@
 --
 -- Target: HPSA_Score (HRSA's 0-25 priority score) and high_need (score in the top quarter of the
 -- training split). Left out on purpose, because HRSA uses them to compute the score or the
--- designation: HPSA_Shortage, HPSA_FTE, population-to-provider ratios, poverty share, travel time
--- and population counts. The old v1 models used HPSA_Score and HPSA_Shortage to predict each
+-- designation: HPSA_Shortage, Degree_of_Shortage, Total_FTE_Clinicians, Formal_Ratio,
+-- Provider_Ratio_Goal, Percent_Pop_Below_Poverty and the population counts. The old v1 models used HPSA_Score and HPSA_Shortage to predict each
 -- other, which is leakage (see queries/archive_v1/).
 --
 -- Split: 80/20 by a hash of HPSA_Name, so every row of one area lands on the same side.
@@ -17,18 +17,19 @@ WITH rows_in AS (
   FROM `bigquery-public-data.sdoh_hrsa_shortage_areas.hpsa_primary_care`
   WHERE HPSA_Score IS NOT NULL
     AND HPSA_Name IS NOT NULL
-    AND LOWER(HPSA_Status) = 'designated'
+    AND HPSA_Withdrawn_Date IS NULL
+    AND LOWER(Status_Description) NOT LIKE '%withdraw%'
 ),
 per_area AS (
   SELECT
     HPSA_Name AS hpsa_name,
     MAX(HPSA_Score) AS hpsa_score,
     MAX(Primary_HHS_Region_Name) AS hhs_region,
-    MAX(Primary_State_Abbreviation) AS state,
-    MAX(Rural_Status) AS rural_status,
-    MAX(Designation_Type) AS designation_type,
-    MAX(HPSA_Population_Type) AS population_type,
-    MAX(Metropolitan_Indicator) AS metro_indicator,
+    MAX(Common_State_Abbr) AS state,
+    MAX(Rural_Status_Desc) AS rural_status,
+    MAX(Type_Desc) AS designation_type,
+    MAX(HPSA_Pop_Type_Desc) AS population_type,
+    MAX(Metropolitan_Indicator_Desc) AS metro_indicator,
     IF(MOD(ABS(FARM_FINGERPRINT(HPSA_Name)), 10) < 8, 'train', 'test') AS split
   FROM rows_in
   GROUP BY HPSA_Name

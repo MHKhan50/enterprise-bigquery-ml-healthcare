@@ -15,7 +15,9 @@ Version 1.0.0 trained a logistic model to predict "Shortage" from `HPSA_Score`, 
 `HPSA_Shortage` from `HPSA_Score`. Both values come out of the same HRSA designation calculation (population to
 provider ratio and related need measures), so the models were learning a definition, not a pattern. Version 2:
 
-- uses only context features and leaves out `HPSA_Shortage`, FTE counts, ratios, poverty share and population counts;
+- uses only context features (`Primary_HHS_Region_Name`, `Common_State_Abbr`, `Rural_Status_Desc`, `Type_Desc`,
+  `HPSA_Pop_Type_Desc`, `Metropolitan_Indicator_Desc`) and leaves out `HPSA_Shortage`, `Degree_of_Shortage`,
+  `Total_FTE_Clinicians`, `Formal_Ratio`, `Percent_Pop_Below_Poverty` and the population counts;
 - builds one row per area (rows grouped by `HPSA_Name`) before splitting, so one area cannot sit in train and test;
 - splits 80/20 with a hash of the area name (`FARM_FINGERPRINT`), the same rule in BigQuery and on Kaggle;
 - compares every model with a baseline (training mean for the score, majority class for high need);
@@ -24,7 +26,7 @@ provider ratio and related need measures), so the models were learning a definit
 
 ## Data
 `bigquery-public-data.sdoh_hrsa_shortage_areas`: tables `hpsa_primary_care`, `hpsa_dental_health` and
-`hpsa_mental_health` (HRSA data published in BigQuery's public datasets). Only areas with status "Designated" are used.
+`hpsa_mental_health` (HRSA data published in BigQuery's public datasets). Withdrawn areas and areas proposed for withdrawal are left out.
 `queries/00_check_columns.sql` lists the real columns; the notebook stops with a clear message if any column the
 SQL needs is missing.
 
