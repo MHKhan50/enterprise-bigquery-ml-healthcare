@@ -60,14 +60,40 @@ project.
 **Tests** (offline): `pip install -r requirements.txt && python -m pytest -q tests`
 
 ## Results
-To be filled in from the Kaggle run (test areas, MAE vs mean baseline with 95% bootstrap interval, ROC AUC with
-95% interval, for each of the three tables).
+Kaggle run on 5 Nov 2026 (scikit-learn, same SQL and split). Test set = areas the models never saw.
+Raw numbers: [`results/results.json`](results/results.json).
+
+**HPSA score (linear regression vs training mean)**
+
+| Table | Train / test areas | Mean baseline MAE | Linear MAE | MAE gain (95% CI) | R² |
+|---|---|---|---|---|---|
+| Primary care | 5,747 / 1,369 | 3.48 | 2.60 | 0.88 (0.75 to 1.00) | 0.40 |
+| Dental health | 5,165 / 1,203 | 4.10 | 2.50 | 1.60 (1.42 to 1.80) | 0.58 |
+| Mental health | 4,710 / 1,138 | 2.77 | 2.29 | 0.49 (0.39 to 0.59) | 0.28 |
+
+**High-need areas, top quarter of score (logistic regression vs majority class)**
+
+| Table | High-need share (test) | Majority accuracy | Logistic accuracy | F1 | ROC AUC (95% CI) |
+|---|---|---|---|---|---|
+| Primary care | 26.7% | 73.3% | 82.0% | 0.63 | 0.84 (0.82 to 0.87) |
+| Dental health | 28.9% | 71.1% | 87.1% | 0.77 | 0.91 (0.89 to 0.93) |
+| Mental health | 27.3% | 72.7% | 78.7% | 0.56 | 0.82 (0.79 to 0.84) |
+
+![Test MAE and ROC curves](results/hpsa_results.png)
+
+What this shows: context features alone beat both baselines on all three tables, with confidence intervals that
+stay clear of zero gain and of AUC 0.5. The signal is strongest for dental and weakest for mental health. Without
+leakage the models explain a part of the score (R² 0.28 to 0.58), not all of it, which is what an honest model
+of a formula-based score should look like when the formula inputs are left out.
+
+The BigQuery ML scripts in `queries/02` and `queries/03` fit the same model types in the console; their numbers
+can differ slightly (different solver and regularisation) and are not reported here.
 
 ## Limitations
 - Areas are grouped by name; two different areas with the same name would be merged.
 - The context features are coarse, so a modest result is expected; the point is an honest number with no leakage.
-- Designation type can carry scoring rules of its own (for example facility designations), so its effect needs care
-  when explaining results.
+- Designation type (`Type_Desc`) includes categories such as high-needs geographic designations, which are defined
+  partly by need, so it may carry part of the score's own logic. A run without this feature is the next check.
 - One snapshot of a public table; the data changes as HRSA updates designations.
 - Association only; nothing here says why an area is short of clinicians.
 
