@@ -1,6 +1,6 @@
 # BigQuery ML: Health Professional Shortage Area analytics
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23272224.svg)](https://doi.org/10.5281/zenodo.23272224) (v1.0.0 archive; see "Version 2" below)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23980154.svg)](https://doi.org/10.5281/zenodo.23980154)
 
 SQL-first machine learning on the US Health Resources and Services Administration (HRSA) shortage area tables in
 BigQuery's public data, with BigQuery ML models and a Kaggle notebook that repeats the analysis in Python.
@@ -102,4 +102,4 @@ Muzammal Hussain, Software Engineer, Data Scientist and AI Researcher. GitHub: [
 ORCID: [0009-0001-2570-5686](https://orcid.org/0009-0001-2570-5686)
 
 ## Citation
-See [`CITATION.cff`](CITATION.cff). Version 1.0.0: https://doi.org/10.5281/zenodo.23272224
+See [`CITATION.cff`](CITATION.cff). Version 2.0.1: https://doi.org/10.5281/zenodo.23980154. Version 1.0.0 (has leakage): https://doi.org/10.5281/zenodo.23272224
